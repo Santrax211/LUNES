@@ -1,0 +1,153 @@
+/* Estilos generales del sitio */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+main {
+    padding: 20px;
+}
+
+/* Estilos para los posts */
+.post {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+/* Estilos para los formularios */
+.form-post {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-post label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-post input[type="text"], .form-post textarea {
+    width: calc(100% - 22px); /* Ajuste para el padding y borde */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box; /* Asegura que el padding y borde se incluyan en el ancho total */
+}
+
+.form-post textarea {
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+/* Estilos para el botón de envío */
+.form-post button.btn-submit {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-post button.btn-submit:hover {
+    background-color: #555;
+}
+
+/* Estilos para el footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    position: relative; /* Cambiado de absolute a relative */
+    width: 100%;
+    bottom: 0;
+}
+
+/* Media Queries para diseño responsive */
+@media (max-width: 768px) {
+    nav ul li {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    nav ul li a {
+        display: block;
+        padding: 10px;
+        text-align: center;
+    }
+    
+    .form-post {
+        padding: 15px;
+    }
+    
+    .form-post input[type="text"], .form-post textarea {
+        font-size: 14px;
+    }
+
+    .form-post button.btn-submit {
+        padding: 8px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 15px;
+    }
+    
+    header h1 {
+        font-size: 18px;
+    }
+    
+    nav ul li {
+        margin: 0;
+    }
+    
+    .form-post {
+        padding: 10px;
+    }
+    
+    .form-post input[type="text"], .form-post textarea {
+        font-size: 12px;
+        padding: 8px;
+    }
+    
+    .form-post button.btn-submit {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}

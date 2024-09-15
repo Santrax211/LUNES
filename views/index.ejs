@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog del Proyecto</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Evaluación y optimización de los recursos tecnológicos en la Untels: Uso eficiente y Mantenimiento</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/nuevo-post">Nuevo Post</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Últimos Posts</h2>
+        <% if (posts.length > 0) { %>
+            <% posts.forEach(function(post) { %>
+                <div class="post">
+                    <h3><%= post.titulo %></h3>
+                    <p><%= post.contenido %></p>
+                    <small>Publicado por: <%= post.autor %> el <%= post.fecha.toLocaleString() %></small>
+                    <br>
+                    <a href="/editar-post/<%= post.id %>">Editar</a>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No hay posts aún. ¡Sé el primero en publicar!</p>
+        <% } %>
+    </main>
+    <footer>
+        <p>&copy; 2024 Grupo - Blog del Proyecto TI</p>
+    </footer>
+</body>
+</html>
