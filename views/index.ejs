@@ -12,7 +12,13 @@
         <nav>
             <ul>
                 <li><a href="/">Inicio</a></li>
-                <li><a href="/nuevo-post">Nuevo Post</a></li>
+                <% if (user) { %> <!-- Mostrar "Nuevo Post" solo si el usuario está autenticado -->
+                    <li><a href="/nuevo-post">Nuevo Post</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                <% } else { %> <!-- Mostrar enlaces de login y registro si el usuario no está autenticado -->
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                <% } %>
             </ul>
         </nav>
     </header>
@@ -23,9 +29,11 @@
                 <div class="post">
                     <h3><%= post.titulo %></h3>
                     <p><%= post.contenido %></p>
-                    <small>Publicado por: <%= post.autor %> el <%= post.fecha.toLocaleString() %></small>
-                    <br>
-                    <a href="/editar-post/<%= post.id %>">Editar</a>
+                    <small>Publicado por: <%= post.autor %> el <%= new Date(post.fecha).toLocaleString() %></small>
+                    <% if (user) { %> <!-- Mostrar el enlace de editar solo si el usuario está autenticado -->
+                        <br>
+                        <a href="/editar-post/<%= post.id %>">Editar</a>
+                    <% } %>
                 </div>
             <% }) %>
         <% } else { %>
@@ -37,3 +45,4 @@
     </footer>
 </body>
 </html>
+
