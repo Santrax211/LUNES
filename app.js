@@ -7,8 +7,10 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const flash = require('connect-flash');
 const crypto = require('crypto');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs'); // Asegúrate de importar fs
 const app = express();
-
 
 // Configuración del motor de plantillas EJS
 app.set('view engine', 'ejs');
@@ -73,7 +75,26 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-// Rutas
+// Configuración de multer para guardar archivos en la carpeta 'public/uploads'
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads'); // Cambia esto si deseas una ruta diferente
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, Date.now() + ext); // Guarda el archivo con un nombre único
+    }
+});
+
+const upload = multer({ storage });
+
+// Middleware para proteger rutas
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+}
 
 // Ruta de inicio de sesión
 app.get('/login', (req, res) => {
@@ -83,13 +104,6 @@ app.get('/login', (req, res) => {
     });
 });
 
-
-/*app.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/login',
-    failureFlash: true
-}));*/
-
 app.post('/login', (req, res, next) => {
     console.log(req.body); // Verifica si los datos están llegando correctamente
     passport.authenticate('local', {
@@ -98,7 +112,6 @@ app.post('/login', (req, res, next) => {
         failureFlash: true
     })(req, res, next);
 });
-
 
 // Ruta para la página de registro
 app.get('/register', (req, res) => {
@@ -118,14 +131,6 @@ app.post('/register', (req, res) => {
     });
 });
 
-// Middleware para proteger rutas
-function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
 // Ruta para mostrar los posts
 app.get('/', (req, res) => {
     const query = 'SELECT * FROM posts ORDER BY fecha DESC';
@@ -144,10 +149,11 @@ app.get('/nuevo-post', isAuthenticated, (req, res) => {
     res.render('nuevo-post');
 });
 
-app.post('/nuevo-post', isAuthenticated, (req, res) => {
+app.post('/nuevo-post', isAuthenticated, upload.single('imagen'), (req, res) => {
     const { titulo, contenido, autor } = req.body;
-    const query = 'INSERT INTO posts (titulo, contenido, autor) VALUES (?, ?, ?)';
-    db.query(query, [titulo, contenido, autor], (err) => {
+    const imagen = req.file ? req.file.filename : null; // Obtén el nombre del archivo cargado
+    const query = 'INSERT INTO posts (titulo, contenido, autor, imagen) VALUES (?, ?, ?, ?)';
+    db.query(query, [titulo, contenido, autor, imagen], (err) => {
         if (err) {
             console.error('Error insertando nuevo post:', err);
             res.sendStatus(500);
@@ -173,17 +179,44 @@ app.get('/editar-post/:id', isAuthenticated, (req, res) => {
     });
 });
 
-app.post('/editar-post/:id', isAuthenticated, (req, res) => {
+app.post('/editar-post/:id', isAuthenticated, upload.single('imagen'), (req, res) => {
     const postId = req.params.id;
-    const { titulo, contenido, autor } = req.body;
-    const query = 'UPDATE posts SET titulo = ?, contenido = ?, autor = ? WHERE id = ?';
-    db.query(query, [titulo, contenido, autor, postId], (err) => {
+    const { titulo, contenido, autor, removeImage } = req.body;
+    let imagen = req.file ? req.file.filename : null; // Obtén el nombre del archivo cargado
+
+    // Verificar si se debe eliminar la imagen actual
+    if (removeImage === 'on') {
+        imagen = null;
+    }
+
+    // Obtener la imagen actual del post si no se está eliminando
+    const query = 'SELECT imagen FROM posts WHERE id = ?';
+    db.query(query, [postId], (err, results) => {
         if (err) {
-            console.error('Error actualizando el post:', err);
+            console.error('Error obteniendo el post:', err);
             res.sendStatus(500);
-        } else {
-            res.redirect('/');
+            return;
         }
+        const currentImage = results[0].imagen;
+
+        // Actualizar el post
+        const updateQuery = 'UPDATE posts SET titulo = ?, contenido = ?, autor = ?, imagen = ? WHERE id = ?';
+        db.query(updateQuery, [titulo, contenido, autor, imagen || currentImage, postId], (err) => {
+            if (err) {
+                console.error('Error actualizando el post:', err);
+                res.sendStatus(500);
+                return;
+            }
+
+            // Eliminar la imagen antigua si es necesario
+            if (imagen === null && currentImage) {
+                fs.unlink(path.join('public/uploads', currentImage), (err) => {
+                    if (err) console.error('Error eliminando la imagen:', err);
+                });
+            }
+
+            res.redirect('/');
+        });
     });
 });
 
@@ -200,3 +233,4 @@ const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
 });
+

@@ -5,25 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog del Proyecto</title>
     <link rel="stylesheet" href="/styles.css">
-    
 </head>
 <body>
     <header>
         <h1>Formulación y Evaluación de Proyectos de TI</h1>
         <nav>
             <div class="wrapper">
-                <div class="logo"><a href="#" >Evaluación y optimización de los recursos tecnológicos en la I.E. 6070 Héroes Del Alto Cenepa</a></div>
+                <div class="logo">
+                    <a href="#">Evaluación y optimización de los recursos tecnológicos en la I.E. 6070 Héroes Del Alto Cenepa</a>
+                </div>
                 <input type="radio" name="slider" id="menu-btn">
                 <input type="radio" name="slider" id="close-btn">
                 <ul class="nav-links">
                     <li><a href="/">Inicio</a></li>
-                <% if (user) { %> 
-                    <li><a href="/nuevo-post">Nuevo Post</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                <% } else { %>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                <% } %>
+                    <% if (user) { %> 
+                        <li><a href="/nuevo-post">Nuevo Post</a></li>
+                        <li><a href="/logout">Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    <% } %>
                 </ul>
             </div>
         </nav>
@@ -36,6 +37,10 @@
                     <h3><%= post.titulo %></h3>
                     <p><%= post.contenido %></p>
                     <small>Publicado por: <%= post.autor %> el <%= new Date(post.fecha).toLocaleString() %></small>
+                    <% if (post.imagen) { %>
+                        <br>
+                        <img src="/uploads/<%= post.imagen %>" alt="Imagen del post" class="post-image">
+                    <% } %>
                     <% if (user) { %> <!-- Mostrar el enlace de editar solo si el usuario está autenticado -->
                         <br>
                         <a href="/editar-post/<%= post.id %>">Editar</a>
@@ -51,4 +56,3 @@
     </footer>
 </body>
 </html>
-
