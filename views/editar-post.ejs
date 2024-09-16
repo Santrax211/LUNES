@@ -17,7 +17,7 @@
         </nav>
     </header>
     <main>
-        <form action="/editar-post/<%= post.id %>" method="POST" class="form-post" enctype="multipart/form-data">
+        <form action="/editar-post/<%= post.id %>" method="POST" class="form-post" enctype="multipart/form-data" data-netlify="true">
             <label for="titulo">Título:</label>
             <input type="text" name="titulo" id="titulo" value="<%= post.titulo %>" required><br>
 
