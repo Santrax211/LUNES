@@ -5,21 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog del Proyecto</title>
     <link rel="stylesheet" href="/styles.css">
+    
 </head>
 <body>
     <header>
-        <h1>Evaluación y optimización de los recursos tecnológicos en la Untels: Uso eficiente y Mantenimiento</h1>
+        <h1>Formulación y Evaluación de Proyectos de TI</h1>
         <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <% if (user) { %> <!-- Mostrar "Nuevo Post" solo si el usuario está autenticado -->
+            <div class="wrapper">
+                <div class="logo"><a href="#" >Evaluación y optimización de los recursos tecnológicos en la I.E. 6070 Héroes Del Alto Cenepa</a></div>
+                <input type="radio" name="slider" id="menu-btn">
+                <input type="radio" name="slider" id="close-btn">
+                <ul class="nav-links">
+                    <li><a href="/">Inicio</a></li>
+                <% if (user) { %> 
                     <li><a href="/nuevo-post">Nuevo Post</a></li>
                     <li><a href="/logout">Logout</a></li>
-                <% } else { %> <!-- Mostrar enlaces de login y registro si el usuario no está autenticado -->
+                <% } else { %>
                     <li><a href="/login">Login</a></li>
                     <li><a href="/register">Register</a></li>
                 <% } %>
-            </ul>
+                </ul>
+            </div>
         </nav>
     </header>
     <main>

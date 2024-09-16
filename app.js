@@ -84,11 +84,21 @@ app.get('/login', (req, res) => {
 });
 
 
-app.post('/login', passport.authenticate('local', {
+/*app.post('/login', passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
-}));
+}));*/
+
+app.post('/login', (req, res, next) => {
+    console.log(req.body); // Verifica si los datos están llegando correctamente
+    passport.authenticate('local', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    })(req, res, next);
+});
+
 
 // Ruta para la página de registro
 app.get('/register', (req, res) => {
